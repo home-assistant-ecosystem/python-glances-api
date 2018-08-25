@@ -6,7 +6,7 @@ Licensed under MIT. All rights reserved.
 
 
 class GlancesApiError(Exception):
-    """General GlancesApiErrorError exception occurred."""
+    """General GlancesApiError exception occurred."""
 
     pass
 
