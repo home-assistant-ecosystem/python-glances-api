@@ -23,7 +23,7 @@ if sys.argv[-1] == 'publish':
 
 setup(
     name='glances_api',
-    version='0.1.0',
+    version='0.2.0',
     description='Python API for interacting with Glances.',
     long_description=long_description,
     url='https://github.com/fabaff/python-glances-api',
