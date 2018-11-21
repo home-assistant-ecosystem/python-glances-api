@@ -1,8 +1,4 @@
-"""
-Copyright (c) 2017-2018 Fabian Affolter <fabian@affolter-engineering.ch>
-
-Licensed under MIT. All rights reserved.
-"""
+"""Client to interact with the Glances API."""
 import asyncio
 import logging
 
