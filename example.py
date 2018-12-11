@@ -1,8 +1,4 @@
-"""
-Copyright (c) 2017-2018 Fabian Affolter <fabian@affolter-engineering.ch>
-
-Licensed under MIT. All rights reserved.
-"""
+"""Sample script to use the Python API client for Glances."""
 import asyncio
 
 import aiohttp
@@ -10,12 +6,13 @@ import aiohttp
 from glances_api import Glances
 
 HOST = '127.0.0.1'
+VERSION = 3
 
 
 async def main():
     """The main part of the example script."""
     async with aiohttp.ClientSession() as session:
-        data = Glances(loop, session)
+        data = Glances(loop, session, version=VERSION)
 
         # Get the metrics for the memory
         await data.get_metrics('mem')
