@@ -41,6 +41,8 @@ class Glances(object):
                     response = await self._session.get(url, auth=auth)
 
             _LOGGER.debug("Response from Glances API: %s", response.status)
+            print(response.status)
+            print(response.text)
             self.data = await response.json()
             _LOGGER.debug(self.data)
         except (asyncio.TimeoutError, aiohttp.ClientError):
