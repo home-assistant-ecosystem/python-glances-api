@@ -1,0 +1,2 @@
+# python-glances-api requirements. Use setup.py for the dependencies.
+.
