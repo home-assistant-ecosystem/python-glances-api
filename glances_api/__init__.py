@@ -8,20 +8,30 @@ import async_timeout
 from . import exceptions
 
 _LOGGER = logging.getLogger(__name__)
-_RESOURCE = '{schema}://{host}:{port}/api/{version}'
+_RESOURCE = "{schema}://{host}:{port}/api/{version}"
 
 
 class Glances(object):
     """A class for handling the data retrieval."""
 
-    def __init__(self, loop, session, host='localhost', port=61208, version=2,
-                 ssl=False, username=None, password=None):
+    def __init__(
+        self,
+        loop,
+        session,
+        host="localhost",
+        port=61208,
+        version=2,
+        ssl=False,
+        username=None,
+        password=None,
+    ):
         """Initialize the connection."""
-        schema = 'https' if ssl else 'http'
+        schema = "https" if ssl else "http"
         self._loop = loop
         self._session = session
-        self.url = _RESOURCE.format(schema=schema, host=host, port=port,
-                                    version=version)
+        self.url = _RESOURCE.format(
+            schema=schema, host=host, port=port, version=version
+        )
         self.data = None
         self.values = None
         self.plugins = None
@@ -30,7 +40,7 @@ class Glances(object):
 
     async def get_data(self):
         """Retrieve the data."""
-        url = '{}/{}'.format(self.url, 'all')
+        url = "{}/{}".format(self.url, "all")
 
         try:
             with async_timeout.timeout(5, loop=self._loop):
@@ -61,7 +71,7 @@ class Glances(object):
 
     async def get_plugins(self):
         """Retrieve the available plugins."""
-        url = '{}/{}'.format(self.url, 'pluginslist')
+        url = "{}/{}".format(self.url, "pluginslist")
 
         try:
             with async_timeout.timeout(5, loop=self._loop):
