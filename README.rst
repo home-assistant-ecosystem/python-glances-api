@@ -14,7 +14,7 @@ The module is available from the `Python Package Index <https://pypi.python.org/
 
     $ pip3 install glances_api
 
-Or on a Fedora-based system.
+Or on a Fedora-based system or on a CentOS/RHEL machine with has EPEL enabled.
 
 .. code:: bash
 
