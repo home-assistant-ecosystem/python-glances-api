@@ -13,10 +13,6 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, "README.rst"), encoding="utf-8") as readme_file:
     long_description = readme_file.read()
 
-if sys.argv[-1] == "publish":
-    os.system("python3 setup.py sdist upload")
-    sys.exit()
-
 setup(
     name="glances_api",
     version="0.2.0",
