@@ -55,6 +55,7 @@ class Glances(object):
             print(response.status)
             print(response.text)
             self.data = await response.json()
+            _LOGGER.debug(self.data)
         except aiohttp.ClientResponseError as err:
             _LOGGER.error(err.message)
             raise exceptions.GlancesApiAuthorizationError from err
