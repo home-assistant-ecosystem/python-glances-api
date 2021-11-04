@@ -43,7 +43,7 @@ class Glances(object):
         url = "{}/{}".format(self.url, "all")
 
         try:
-            with async_timeout.timeout(5, loop=self._loop):
+            with async_timeout.timeout(5):
                 if self.password is None:
                     response = await self._session.get(url)
                 else:
@@ -74,7 +74,7 @@ class Glances(object):
         url = "{}/{}".format(self.url, "pluginslist")
 
         try:
-            with async_timeout.timeout(5, loop=self._loop):
+            with async_timeout.timeout(5):
                 if self.password is None:
                     response = await self._session.get(url)
                 else:
