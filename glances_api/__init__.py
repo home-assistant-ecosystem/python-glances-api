@@ -2,8 +2,7 @@
 import asyncio
 import logging
 
-import aiohttp
-import async_timeout
+import httpx
 
 from . import exceptions
 
@@ -16,8 +15,6 @@ class Glances(object):
 
     def __init__(
         self,
-        loop,
-        session,
         host="localhost",
         port=61208,
         version=2,
@@ -27,67 +24,50 @@ class Glances(object):
     ):
         """Initialize the connection."""
         schema = "https" if ssl else "http"
-        self._loop = loop
-        self._session = session
         self.url = _RESOURCE.format(
             schema=schema, host=host, port=port, version=version
         )
-        self.data = None
-        self.values = None
         self.plugins = None
+        self.values = None
         self.username = username
         self.password = password
 
-    async def get_data(self):
+    async def get_data(self, endpoint):
         """Retrieve the data."""
-        url = "{}/{}".format(self.url, "all")
+        url = "{}/{}".format(self.url, endpoint)
 
         try:
-            with async_timeout.timeout(5):
+            async with httpx.AsyncClient() as client:
                 if self.password is None:
-                    response = await self._session.get(url)
+                    response = await client.get(str(url))
                 else:
-                    auth = aiohttp.BasicAuth(self.username, self.password)
-                    response = await self._session.get(url, auth=auth)
+                    response = await client.get(
+                        str(url), auth=(self.username, self.password)
+                    )
+        except httpx.ConnectError:
+            raise exceptions.GlancesApiConnectionError(f"Connection to {url} failed")
 
-            _LOGGER.debug("Response from Glances API: %s", response.status)
-            response.raise_for_status()
-            print(response.status)
-            print(response.text)
-            self.data = await response.json()
-            _LOGGER.debug(self.data)
-        except aiohttp.ClientResponseError as err:
-            _LOGGER.error(err.message)
-            raise exceptions.GlancesApiAuthorizationError from err
-        except (asyncio.TimeoutError, aiohttp.ClientError) as err:
-            _LOGGER.error("Can not load data from Glances API")
-            raise exceptions.GlancesApiConnectionError
+        if response.status_code == httpx.codes.OK:
+            try:
+                _LOGGER.debug(response.json())
+                # print(self.data)
+                # self.data = response.json()
+                if endpoint == "all":
+                    self.data = response.json()
+                if endpoint == "pluginslist":
+                    self.plugins = response.json()
+            except TypeError:
+                _LOGGER.error("Can not load data from Glances")
+                raise exceptions.GlancesApiConnectionError(
+                    "Unable to get the data from Glances"
+                )
 
     async def get_metrics(self, element):
         """Get all the metrics for a monitored element."""
-        await self.get_data()
-        await self.get_plugins()
+        await self.get_data("all")
+        await self.get_data("pluginslist")
 
         if element in self.plugins:
             self.values = self.data[element]
         else:
             raise exceptions.GlancesApiError("Element data not available")
-
-    async def get_plugins(self):
-        """Retrieve the available plugins."""
-        url = "{}/{}".format(self.url, "pluginslist")
-
-        try:
-            with async_timeout.timeout(5):
-                if self.password is None:
-                    response = await self._session.get(url)
-                else:
-                    auth = aiohttp.BasicAuth(self.username, self.password)
-                    response = await self._session.get(url, auth=auth)
-
-            _LOGGER.debug("Response from Glances API: %s", response.status)
-            self.plugins = await response.json()
-            _LOGGER.debug(self.plugins)
-        except (asyncio.TimeoutError, aiohttp.ClientError):
-            _LOGGER.error("Can not load plugins from Glances API")
-            raise exceptions.GlancesApiConnectionError()
