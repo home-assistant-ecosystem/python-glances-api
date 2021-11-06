@@ -47,6 +47,11 @@ class Glances(object):
         except httpx.ConnectError:
             raise exceptions.GlancesApiConnectionError(f"Connection to {url} failed")
 
+        if response.status_code == httpx.codes.UNAUTHORIZED:
+            raise exceptions.GlancesApiAuthorizationError(
+                "Please check your credentials"
+            )
+
         if response.status_code == httpx.codes.OK:
             try:
                 _LOGGER.debug(response.json())
