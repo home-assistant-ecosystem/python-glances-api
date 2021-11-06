@@ -3,7 +3,19 @@ name = "glances_api"
 version = "0.2.2"
 description = "Python API for interacting with Glances"
 authors = ["Fabian Affolter <fabian@affolter-engineering.ch>"]
+homepage = "https://github.com/home-assistant-ecosystem/python-glances-api"
+repository = "https://github.com/home-assistant-ecosystem/python-glances-api/releases"
+readme = "README.rst"
 license = "MIT"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Topic :: Utilities",
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
