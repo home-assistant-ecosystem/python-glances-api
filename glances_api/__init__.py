@@ -51,13 +51,17 @@ class Glances(object):
                     response = await self._session.get(url, auth=auth)
 
             _LOGGER.debug("Response from Glances API: %s", response.status)
+            response.raise_for_status()
             print(response.status)
             print(response.text)
             self.data = await response.json()
             _LOGGER.debug(self.data)
-        except (asyncio.TimeoutError, aiohttp.ClientError):
+        except aiohttp.ClientResponseError as err:
+            _LOGGER.error(err.message)
+            raise exceptions.GlancesApiAuthorizationError from err
+        except (asyncio.TimeoutError, aiohttp.ClientError) as err:
             _LOGGER.error("Can not load data from Glances API")
-            raise exceptions.GlancesApiConnectionError()
+            raise exceptions.GlancesApiConnectionError
 
     async def get_metrics(self, element):
         """Get all the metrics for a monitored element."""
