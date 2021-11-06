@@ -1,9 +1,9 @@
 """Test the interaction with the currencylayer API."""
+import httpx
 import pytest
 from pytest_httpx import HTTPXMock
 
 from glances_api import Glances
-import httpx
 
 
 @pytest.mark.asyncio
