@@ -1,6 +1,11 @@
 Changes
 =======
 
+20211107 - 0.3.1
+----------------
+
+- Add exception for invalid credentials (Thanks @engrbm87)
+
 20211106 - 0.3.0
 ----------------
 
