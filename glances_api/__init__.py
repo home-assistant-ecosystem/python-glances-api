@@ -19,6 +19,7 @@ class Glances(object):
         port=61208,
         version=2,
         ssl=False,
+        verify_ssl=True,
         username=None,
         password=None,
     ):
@@ -31,6 +32,7 @@ class Glances(object):
         self.values = None
         self.username = username
         self.password = password
+        self.verify_ssl = verify_ssl if verify_ssl else True
 
     async def get_data(self, endpoint):
         """Retrieve the data."""
@@ -39,10 +41,10 @@ class Glances(object):
         try:
             async with httpx.AsyncClient() as client:
                 if self.password is None:
-                    response = await client.get(str(url))
+                    response = await client.get(str(url), verify=self.verify_ssl)
                 else:
                     response = await client.get(
-                        str(url), auth=(self.username, self.password)
+                        str(url), auth=(self.username, self.password), verify=self.verify_ssl
                     )
         except httpx.ConnectError:
             raise exceptions.GlancesApiConnectionError(f"Connection to {url} failed")
