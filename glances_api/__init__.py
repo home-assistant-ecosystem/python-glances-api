@@ -21,7 +21,7 @@ class Glances(object):
         ssl=False,
         username=None,
         password=None,
-        custom_httpx_client=None,
+        httpx_client=None,
     ):
         """Initialize the connection."""
         schema = "https" if ssl else "http"
@@ -32,16 +32,16 @@ class Glances(object):
         self.values = None
         self.username = username
         self.password = password
-        self.custom_httpx_client = custom_httpx_client
+        self.httpx_client = httpx_client
 
     async def get_data(self, endpoint):
         """Retrieve the data."""
         url = "{}/{}".format(self.url, endpoint)
 
-        httpxClient = this.custom_httpx_client if this.custom_httpx_client else httpx.AsyncClient()
+        httpx_client = self.httpx_client if self.httpx_client else httpx.AsyncClient()
         
         try:
-            async with httpxClient as client:
+            async with httpx_client as client:
                 if self.password is None:
                     response = await client.get(str(url))
                 else:
