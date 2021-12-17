@@ -55,8 +55,6 @@ class Glances(object):
         if response.status_code == httpx.codes.OK:
             try:
                 _LOGGER.debug(response.json())
-                # print(self.data)
-                # self.data = response.json()
                 if endpoint == "all":
                     self.data = response.json()
                 if endpoint == "pluginslist":
