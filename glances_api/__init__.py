@@ -39,12 +39,12 @@ class Glances(object):
         url = "{}/{}".format(self.url, endpoint)
 
         try:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(verify=self.verify_ssl) as client:
                 if self.password is None:
-                    response = await client.get(str(url), verify=self.verify_ssl)
+                    response = await client.get(str(url))
                 else:
                     response = await client.get(
-                        str(url), auth=(self.username, self.password), verify=self.verify_ssl
+                        str(url), auth=(self.username, self.password)
                     )
         except httpx.ConnectError:
             raise exceptions.GlancesApiConnectionError(f"Connection to {url} failed")
