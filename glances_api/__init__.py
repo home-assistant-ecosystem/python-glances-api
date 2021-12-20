@@ -19,6 +19,7 @@ class Glances(object):
         port=61208,
         version=2,
         ssl=False,
+        verify_ssl=True,
         username=None,
         password=None,
     ):
@@ -31,13 +32,14 @@ class Glances(object):
         self.values = None
         self.username = username
         self.password = password
+        self.verify_ssl = verify_ssl
 
     async def get_data(self, endpoint):
         """Retrieve the data."""
         url = "{}/{}".format(self.url, endpoint)
 
         try:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(verify=self.verify_ssl) as client:
                 if self.password is None:
                     response = await client.get(str(url))
                 else:
