@@ -32,7 +32,7 @@ class Glances(object):
         self.values = None
         self.username = username
         self.password = password
-        self.verify_ssl = verify_ssl if verify_ssl else True
+        self.verify_ssl = verify_ssl
 
     async def get_data(self, endpoint):
         """Retrieve the data."""
