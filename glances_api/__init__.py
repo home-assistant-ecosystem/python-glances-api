@@ -40,8 +40,12 @@ class Glances(object):
         """Retrieve the data."""
         url = "{}/{}".format(self.url, endpoint)
 
-        httpx_client = self.httpx_client if self.httpx_client else httpx.AsyncClient(verify=self.verify_ssl)
-        
+        httpx_client = (
+            self.httpx_client
+            if self.httpx_client
+            else httpx.AsyncClient(verify=self.verify_ssl)
+        )
+
         try:
             async with httpx_client as client:
                 if self.password is None:
