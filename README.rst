@@ -20,6 +20,14 @@ Or on a Fedora-based system or on a CentOS/RHEL machine with has EPEL enabled.
 
     $ sudo dnf -y install python3-glances-api
 
+
+For Nix or NixOS is `pre-packed module <https://search.nixos.org/packages?channel=unstable&query=glances-api>`_
+available. The lastest release is usually present in the ``unstable`` channel.
+
+.. code:: bash
+
+    $ nix-env -iA nixos.python3Packages.glances-api
+
 Usage
 -----
 
