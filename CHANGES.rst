@@ -1,6 +1,11 @@
 Changes
 =======
 
+2022016 - 0.3.4
+----------------
+
+-  Allow using a custom external httpx client (Thanks @GuyKh)
+
 20220104 - 0.3.3
 ----------------
 
