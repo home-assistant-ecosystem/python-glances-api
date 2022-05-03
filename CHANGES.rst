@@ -1,7 +1,12 @@
 Changes
 =======
 
-2022016 - 0.3.4
+20220503 - 0.3.5
+----------------
+
+- Handle TimeoutException (Thanks @b0z02003)
+
+20220116 - 0.3.4
 ----------------
 
 -  Allow using a custom external httpx client (Thanks @GuyKh)
