@@ -3,7 +3,7 @@ import httpx
 import pytest
 from pytest_httpx import HTTPXMock
 
-from glances_api import Glances
+from glances_api import Glances, exceptions
 
 
 @pytest.mark.asyncio
@@ -18,6 +18,6 @@ async def test_timeout(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(raise_timeout)
 
-    with pytest.raises(httpx.ReadTimeout):
+    with pytest.raises(exceptions.GlancesApiConnectionError):
         client = Glances()
         await client.get_metrics("mem")

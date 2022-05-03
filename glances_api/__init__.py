@@ -54,7 +54,7 @@ class Glances(object):
                     response = await client.get(
                         str(url), auth=(self.username, self.password)
                     )
-        except httpx.ConnectError:
+        except (httpx.ConnectError, httpx.TimeoutException):
             raise exceptions.GlancesApiConnectionError(f"Connection to {url} failed")
 
         if response.status_code == httpx.codes.UNAUTHORIZED:
