@@ -19,7 +19,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-httpx = ">=0.22,<1"
+httpx = ">=0.23,<1"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
