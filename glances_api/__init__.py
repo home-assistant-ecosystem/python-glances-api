@@ -147,7 +147,7 @@ class Glances:
             sensor_data["docker"]["docker_cpu_use"] = round(cpu_use, 1)
             mem_use = 0.0
             for container in active_containers:
-                cpu_use += container["memory"]["usage"]
+                mem_use += container["memory"]["usage"]
             sensor_data["docker"]["docker_memory_use"] = round(mem_use / 1024**2, 1)
         if data := self.data.get("raid"):
             sensor_data["raid"] = data
