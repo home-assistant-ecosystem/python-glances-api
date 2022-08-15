@@ -34,14 +34,20 @@ class Glances:
         self.username = username
         self.password = password
         self.verify_ssl = verify_ssl
-        self.httpx_client = httpx_client or httpx.AsyncClient(verify=verify_ssl)
+        self.httpx_client = httpx_client
 
     async def get_data(self, endpoint: str) -> None:
         """Retrieve the data."""
         url = f"{self.url}/{endpoint}"
 
+        httpx_client = (
+            self.httpx_client
+            if self.httpx_client
+            else httpx.AsyncClient(verify=self.verify_ssl)
+        )
+
         try:
-            async with self.httpx_client as client:
+            async with httpx_client as client:
                 if self.password is None:
                     response = await client.get(url)
                 else:
