@@ -87,3 +87,68 @@ class Glances:
             self.values = self.data[element]
         else:
             raise exceptions.GlancesApiError("Element data not available")
+
+    async def get_ha_sensor_data(self) -> dict[str, Any] | None:
+        """Return data dict for homeassistant sensors."""
+
+        await self.get_data("all")
+
+        sensor_data: dict[str, Any] = {}
+
+        if disks := self.data.get("fs"):
+            sensor_data["fs"] = {}
+            for disk in disks:
+                disk_free = disk.get("free") or (disk["size"] - disk["used"])
+                sensor_data["fs"][disk["mnt_point"]] = {
+                    "disk_use": round(disk["used"] / 1024**3, 1),
+                    "disk_use_percent": disk["percent"],
+                    "disk_free": round(disk_free / 1024**3, 1),
+                }
+        if data := self.data.get("sensors"):
+            sensor_data["sensors"] = {}
+            for sensor in data:
+                sensor_data["sensors"][sensor["label"]] = {
+                    sensor["type"]: sensor["value"]
+                }
+        if data := self.data.get("mem"):
+            sensor_data["mem"] = {
+                "memory_use_percent": data["percent"],
+                "memory_use": round(data["used"] / 1024**2, 1),
+                "memory_free": round(data["free"] / 1024**2, 1),
+            }
+        if data := self.data.get("memswap"):
+            sensor_data["memswap"] = {
+                "swap_use_percent": data["percent"],
+                "swap_use": round(data["used"] / 1024**3, 1),
+                "swap_free": round(data["free"] / 1024**3, 1),
+            }
+        if data := self.data.get("load"):
+            sensor_data["load"] = {
+                "processor_load": data.get("min15")
+                or self.data["cpu"]["total"]  # to be checked
+            }
+        if data := self.data.get("processcount"):
+            sensor_data["processcount"] = {
+                "process_running": data["running"],
+                "process_total": data["total"],
+                "process_thread": data["thread"],
+                "process_sleeping": data["sleeping"],
+            }
+        if data := self.data.get("quicklook"):
+            sensor_data["cpu"] = {"cpu_use_percent": data["cpu"]}
+        if "docker" in self.data and (data := self.data["docker"].get("containers")):
+            active_containers = [
+                container for container in data if container["Status"] == "running"
+            ]
+            sensor_data["docker"] = {"docker_active": len(active_containers)}
+            cpu_use = 0.0
+            for container in active_containers:
+                cpu_use += container["cpu"]["total"]
+            sensor_data["docker"]["docker_cpu_use"] = round(cpu_use, 1)
+            mem_use = 0.0
+            for container in active_containers:
+                cpu_use += container["memory"]["usage"]
+            sensor_data["docker"]["docker_memory_use"] = round(mem_use / 1024**2, 1)
+        if data := self.data.get("raid"):
+            sensor_data["raid"] = data
+        return sensor_data
