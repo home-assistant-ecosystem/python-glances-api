@@ -1,8 +1,8 @@
 """Test the interaction with the Glances API."""
 import pytest
-from pytest_httpx import HTTPXMock
-
 from glances_api import Glances
+from glances_api.exceptions import GlancesApiNoDataAvailable
+from pytest_httpx import HTTPXMock
 
 PLUGINS_LIST_RESPONSE = [
     "alert",
@@ -52,12 +52,13 @@ RESPONSE = {
 @pytest.mark.asyncio
 async def test_non_existing_endpoint(httpx_mock: HTTPXMock):
     """Test a non-exisiting endpoint."""
-    httpx_mock.add_response(json={})
+    httpx_mock.add_response(status_code=400)
 
     client = Glances()
-    await client.get_data("some-data")
-
-    assert client.values == None
+    with pytest.raises(GlancesApiNoDataAvailable):
+        await client.get_data("some-data")
+    
+    assert not client.data
 
 
 @pytest.mark.asyncio
