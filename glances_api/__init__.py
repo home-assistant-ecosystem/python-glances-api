@@ -40,7 +40,7 @@ class Glances:
         """Retrieve the data."""
         url = f"{self.url}/{endpoint}"
 
-        httpx_client = (
+        httpx_client: Any = (
             self.httpx_client
             if self.httpx_client
             else httpx.AsyncClient(verify=self.verify_ssl)

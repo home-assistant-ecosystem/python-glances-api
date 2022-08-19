@@ -27,6 +27,29 @@ pytest = "^6.2.5"
 pytest-httpx = ">0.15,<1"
 pytest-asyncio = "^0.16.0"
 isort = "^5.10.0"
+mypy = "^0.971"
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+mypy_path = "glances_api/"
+no_implicit_optional = true
+show_error_codes = true
+warn_unreachable = true
+warn_unused_ignores = true
+exclude = [
+    'pyproject.toml',
+]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+allow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "docs.*"
+ignore_errors = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
