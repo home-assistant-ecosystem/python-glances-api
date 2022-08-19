@@ -89,7 +89,7 @@ class Glances:
             raise exceptions.GlancesApiError("Element data not available")
 
     async def get_ha_sensor_data(self) -> dict[str, Any] | None:
-        """Return data dict for homeassistant sensors."""
+        """Create a dictionary with data for Home Assistant sensors."""
 
         await self.get_data("all")
 
