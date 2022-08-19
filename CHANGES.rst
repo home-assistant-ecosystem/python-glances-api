@@ -1,6 +1,11 @@
 Changes
 =======
 
+20220819 - 0.4.0
+----------------
+
+- Add pre-definied output for Home Assistant (Thanks @engrbm87)
+
 20220605 - 0.3.6
 ----------------
 
