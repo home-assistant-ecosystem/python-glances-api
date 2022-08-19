@@ -5,6 +5,7 @@ Changes
 ----------------
 
 - Add pre-definied output for Home Assistant (Thanks @engrbm87)
+- Extend typing support
 
 20220605 - 0.3.6
 ----------------
