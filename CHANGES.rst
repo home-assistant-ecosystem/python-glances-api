@@ -1,6 +1,11 @@
 Changes
 =======
 
+20220828 - 0.4.1
+----------------
+
+- Raise error for any not OK response code (Thanks @engrbm87)
+
 20220819 - 0.4.0
 ----------------
 
