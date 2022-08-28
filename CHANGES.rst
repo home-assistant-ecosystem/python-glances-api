@@ -5,6 +5,7 @@ Changes
 ----------------
 
 - Raise error for any not OK response code (Thanks @engrbm87)
+- Update dependencies
 
 20220819 - 0.4.0
 ----------------
