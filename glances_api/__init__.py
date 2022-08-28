@@ -61,22 +61,22 @@ class Glances:
             raise exceptions.GlancesApiAuthorizationError(
                 "Please check your credentials"
             )
-        if response.status_code == httpx.codes.BAD_REQUEST:
+            
+        if response.status_code != httpx.codes.OK:
             raise exceptions.GlancesApiNoDataAvailable(
                 f"endpoint: '{endpoint}' is not valid"
             )
-        if response.status_code == httpx.codes.OK:
-            try:
-                _LOGGER.debug(response.json())
-                if endpoint == "all":
-                    self.data = response.json()
-                elif endpoint == "pluginslist":
-                    self.plugins = response.json()
-            except TypeError:
-                _LOGGER.error("Can not load data from Glances")
-                raise exceptions.GlancesApiConnectionError(
-                    "Unable to get the data from Glances"
-                )
+        try:
+            _LOGGER.debug(response.json())
+            if endpoint == "all":
+                self.data = response.json()
+            elif endpoint == "pluginslist":
+                self.plugins = response.json()
+        except TypeError:
+            _LOGGER.error("Can not load data from Glances")
+            raise exceptions.GlancesApiConnectionError(
+                "Unable to get the data from Glances"
+            )
 
     async def get_metrics(self, element: str) -> None:
         """Get all the metrics for a monitored element."""
