@@ -138,11 +138,7 @@ HA_SENSOR_DATA = {
         "memory_use": 1047.1,
         "memory_free": 2745.0,
     },
-    "docker": {
-        "docker_active": 2,
-        "docker_cpu_use": 77.2,
-        "docker_memory_use": 1149.6
-    }
+    "docker": {"docker_active": 2, "docker_cpu_use": 77.2, "docker_memory_use": 1149.6},
 }
 
 

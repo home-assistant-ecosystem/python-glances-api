@@ -61,7 +61,7 @@ class Glances:
             raise exceptions.GlancesApiAuthorizationError(
                 "Please check your credentials"
             )
-            
+
         if response.status_code != httpx.codes.OK:
             raise exceptions.GlancesApiNoDataAvailable(
                 f"endpoint: '{endpoint}' is not valid"
