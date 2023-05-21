@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.4.2 - 2023-05-21
+------------------
+
+- Safe access container dict when memory or cpu is not exposed (Thanks @freeDom-)
+
 20220828 - 0.4.1
 ----------------
 
