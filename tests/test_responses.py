@@ -188,8 +188,11 @@ async def test_ha_sensor_data(httpx_mock: HTTPXMock):
 
     assert result == HA_SENSOR_DATA
 
+
 @pytest.mark.asyncio
-async def test_ha_sensor_data_with_incomplete_container_information(httpx_mock: HTTPXMock):
+async def test_ha_sensor_data_with_incomplete_container_information(
+    httpx_mock: HTTPXMock,
+):
     """Test the return value for ha sensors when container memory and cpu data is not exposed by glances."""
     TEST_RESPONSE = RESPONSE
     del TEST_RESPONSE["docker"]["containers"][0]["memory"]["usage"]
