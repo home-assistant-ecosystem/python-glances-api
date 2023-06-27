@@ -135,6 +135,15 @@ class Glances:
             }
         if data := self.data.get("quicklook"):
             sensor_data["cpu"] = {"cpu_use_percent": data["cpu"]}
+        if networks := self.data.get("network"):
+            sensor_data["network"] = {}
+            for network in networks:
+                sensor_data["network"][network["interface_name"]] = {
+                    "is_up": network["is_up"],
+                    "rx": round(network["rx"] / 1024, 1),
+                    "tx": round(network["tx"] / 1024, 1),
+                    "speed": round(network["speed"] / 1024**3, 1),
+                }
         if "docker" in self.data and (data := self.data["docker"].get("containers")):
             active_containers = [
                 container for container in data if container["Status"] == "running"
