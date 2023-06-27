@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.3 - 2023-06-27
+------------------
+
+- Add network information to Home Assistant data (Thanks @freeDom-)
+- Add uptime information to Home Assistant data (Thanks @freeDom-)
+- Update dependencies
+
+
 0.4.2 - 2023-05-21
 ------------------
 
