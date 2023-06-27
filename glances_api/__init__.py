@@ -150,4 +150,6 @@ class Glances:
             sensor_data["docker"]["docker_memory_use"] = round(mem_use / 1024**2, 1)
         if data := self.data.get("raid"):
             sensor_data["raid"] = data
+        if data := self.data.get("uptime"):
+            sensor_data["uptime"] = data
         return sensor_data
