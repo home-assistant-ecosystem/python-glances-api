@@ -260,7 +260,7 @@ HA_SENSOR_DATA = {
     },
     "docker": {"docker_active": 2, "docker_cpu_use": 77.2, "docker_memory_use": 1149.6},
     "uptime": "3 days, 10:25:20",
-    "percpu": {"0": "22.1", "1": "17.2"},
+    "percpu": {"0": {"cpu_use_percent": 22.1}, "1": {"cpu_use_percent": 17.2}},
 }
 
 

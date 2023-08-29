@@ -138,7 +138,7 @@ class Glances:
         if data := self.data.get("percpu"):
             sensor_data["percpu"] = {}
             for cpu in data:
-                sensor_data["percpu"][cpu["cpu_number"]] = {
+                sensor_data["percpu"][str(cpu["cpu_number"])] = {
                     "cpu_use_percent": cpu["total"]
                 }
         if networks := self.data.get("network"):
