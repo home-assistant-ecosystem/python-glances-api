@@ -285,14 +285,14 @@ async def test_ha_sensor_data_with_incomplete_container_information(
 ):
     """Test the return value for ha sensors when container memory and cpu data is not exposed by glances."""
     TEST_RESPONSE = RESPONSE
-    del TEST_RESPONSE["docker"]["containers"][0]["memory"]["usage"]
-    del TEST_RESPONSE["docker"]["containers"][0]["cpu"]["total"]
-    del TEST_RESPONSE["docker"]["containers"][1]["memory"]["usage"]
-    del TEST_RESPONSE["docker"]["containers"][1]["cpu"]["total"]
+    del TEST_RESPONSE["containers"]["containers"][0]["memory"]["usage"]
+    del TEST_RESPONSE["containers"]["containers"][0]["cpu"]["total"]
+    del TEST_RESPONSE["containers"]["containers"][1]["memory"]["usage"]
+    del TEST_RESPONSE["containers"]["containers"][1]["cpu"]["total"]
 
     TEST_HA_SENSOR_DATA = HA_SENSOR_DATA
-    TEST_HA_SENSOR_DATA["docker"]["docker_memory_use"] = 0
-    TEST_HA_SENSOR_DATA["docker"]["docker_cpu_use"] = 0
+    TEST_HA_SENSOR_DATA["containers"]["docker_memory_use"] = 0
+    TEST_HA_SENSOR_DATA["containers"]["docker_cpu_use"] = 0
 
     httpx_mock.add_response(json=TEST_RESPONSE)
 
