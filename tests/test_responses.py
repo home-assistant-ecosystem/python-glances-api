@@ -26,6 +26,38 @@ RESPONSE = {
         "nice": 0.0,
         "iowait": 0.6,
     },
+    "percpu": [
+        {
+            "key": "cpu_number",
+            "cpu_number": 0,
+            "total": 22.1,
+            "user": 7.6,
+            "system": 12.4,
+            "idle": 77.9,
+            "nice": 0.0,
+            "iowait": 0.2,
+            "irq": 0.0,
+            "softirq": 1.8,
+            "steal": 0.0,
+            "guest": 0.0,
+            "guest_nice": 0.0,
+        },
+        {
+            "key": "cpu_number",
+            "cpu_number": 1,
+            "total": 17.2,
+            "user": 8.7,
+            "system": 7.8,
+            "idle": 82.8,
+            "nice": 0.0,
+            "iowait": 0.4,
+            "irq": 0.0,
+            "softirq": 0.3,
+            "steal": 0.0,
+            "guest": 0.0,
+            "guest_nice": 0.0,
+        },
+    ],
     "diskio": [
         {
             "time_since_update": 1,
@@ -228,6 +260,7 @@ HA_SENSOR_DATA = {
     },
     "docker": {"docker_active": 2, "docker_cpu_use": 77.2, "docker_memory_use": 1149.6},
     "uptime": "3 days, 10:25:20",
+    "percpu": {"0": "22.1", "1": "17.2"},
 }
 
 
