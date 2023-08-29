@@ -37,7 +37,9 @@ RESPONSE = {
             "key": "disk_name",
         },
     ],
-    "docker": {
+    "containers": {
+        "version": {},
+        "version_podman": {},
         "containers": [
             {
                 "key": "name",
