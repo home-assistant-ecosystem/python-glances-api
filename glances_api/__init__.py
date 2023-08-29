@@ -147,7 +147,9 @@ class Glances:
         data = self.data.get("dockers") or self.data.get("containers")
         if data and (containers_data := data.get("containers")):
             active_containers = [
-                container for container in containers_data if container["Status"] == "running"
+                container
+                for container in containers_data
+                if container["Status"] == "running"
             ]
             sensor_data["docker"] = {"docker_active": len(active_containers)}
             cpu_use = 0.0
