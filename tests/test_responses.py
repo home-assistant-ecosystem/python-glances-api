@@ -291,8 +291,8 @@ async def test_ha_sensor_data_with_incomplete_container_information(
     del TEST_RESPONSE["containers"]["containers"][1]["cpu"]["total"]
 
     TEST_HA_SENSOR_DATA = HA_SENSOR_DATA
-    TEST_HA_SENSOR_DATA["containers"]["docker_memory_use"] = 0
-    TEST_HA_SENSOR_DATA["containers"]["docker_cpu_use"] = 0
+    TEST_HA_SENSOR_DATA["docker"]["docker_memory_use"] = 0
+    TEST_HA_SENSOR_DATA["docker"]["docker_cpu_use"] = 0
 
     httpx_mock.add_response(json=TEST_RESPONSE)
 
