@@ -18,7 +18,7 @@ class Glances:
         self,
         host: str = "localhost",
         port: int = 61208,
-        version: int = 2,
+        version: int = 3,
         ssl: bool = False,
         verify_ssl: bool = True,
         username: str | None = None,
@@ -26,6 +26,11 @@ class Glances:
         httpx_client: httpx.AsyncClient | None = None,
     ):
         """Initialize the connection."""
+        if version == 2:
+            _LOGGER.warning(
+                "Glances api older than v3 will not be supported in the next release."
+            )
+
         schema = "https" if ssl else "http"
         self.url = f"{schema}://{host}:{port}/api/{version}"
         self.data: dict[str, Any] = {}
