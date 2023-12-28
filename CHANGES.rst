@@ -1,6 +1,40 @@
 Changes
 =======
 
+0.5.0 - 2023-11-17
+------------------
+
+- Deprecate support for API v2 (Thanks @engrbm87)
+- Fix type hint for get_ha_sensor_data (Thanks @engrbm87)
+- Add percpu data (Thanks @engrbm87)
+- Update containers data key (Thanks @engrbm87)
+- Add GPU sensors (Thanks @neuralyze)
+- Update dependencies
+
+0.4.3 - 2023-06-27
+------------------
+
+- Add network information to Home Assistant data (Thanks @freeDom-)
+- Add uptime information to Home Assistant data (Thanks @freeDom-)
+- Update dependencies
+
+0.4.2 - 2023-05-21
+------------------
+
+- Safe access container dict when memory or cpu is not exposed (Thanks @freeDom-)
+
+20220828 - 0.4.1
+----------------
+
+- Raise error for any not OK response code (Thanks @engrbm87)
+- Update dependencies
+
+20220819 - 0.4.0
+----------------
+
+- Add pre-definied output for Home Assistant (Thanks @engrbm87)
+- Extend typing support
+
 20220605 - 0.3.6
 ----------------
 

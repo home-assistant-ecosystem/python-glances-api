@@ -1,46 +1,51 @@
 """Client to interact with the Glances API."""
-import asyncio
+from __future__ import annotations
+
 import logging
+from typing import Any
 
 import httpx
 
 from . import exceptions
 
 _LOGGER = logging.getLogger(__name__)
-_RESOURCE = "{schema}://{host}:{port}/api/{version}"
 
 
-class Glances(object):
+class Glances:
     """A class for handling the data retrieval."""
 
     def __init__(
         self,
-        host="localhost",
-        port=61208,
-        version=2,
-        ssl=False,
-        verify_ssl=True,
-        username=None,
-        password=None,
-        httpx_client=None,
+        host: str = "localhost",
+        port: int = 61208,
+        version: int = 3,
+        ssl: bool = False,
+        verify_ssl: bool = True,
+        username: str | None = None,
+        password: str | None = None,
+        httpx_client: httpx.AsyncClient | None = None,
     ):
         """Initialize the connection."""
+        if version == 2:
+            _LOGGER.warning(
+                "Glances api older than v3 will not be supported in the next release."
+            )
+
         schema = "https" if ssl else "http"
-        self.url = _RESOURCE.format(
-            schema=schema, host=host, port=port, version=version
-        )
-        self.plugins = None
-        self.values = None
+        self.url = f"{schema}://{host}:{port}/api/{version}"
+        self.data: dict[str, Any] = {}
+        self.plugins: list[str] = []
+        self.values: Any | None = None
         self.username = username
         self.password = password
         self.verify_ssl = verify_ssl
         self.httpx_client = httpx_client
 
-    async def get_data(self, endpoint):
+    async def get_data(self, endpoint: str) -> None:
         """Retrieve the data."""
-        url = "{}/{}".format(self.url, endpoint)
+        url = f"{self.url}/{endpoint}"
 
-        httpx_client = (
+        httpx_client: Any = (
             self.httpx_client
             if self.httpx_client
             else httpx.AsyncClient(verify=self.verify_ssl)
@@ -49,10 +54,10 @@ class Glances(object):
         try:
             async with httpx_client as client:
                 if self.password is None:
-                    response = await client.get(str(url))
+                    response = await client.get(url)
                 else:
                     response = await client.get(
-                        str(url), auth=(self.username, self.password)
+                        url, auth=(self.username, self.password)
                     )
         except (httpx.ConnectError, httpx.TimeoutException):
             raise exceptions.GlancesApiConnectionError(f"Connection to {url} failed")
@@ -62,20 +67,23 @@ class Glances(object):
                 "Please check your credentials"
             )
 
-        if response.status_code == httpx.codes.OK:
-            try:
-                _LOGGER.debug(response.json())
-                if endpoint == "all":
-                    self.data = response.json()
-                if endpoint == "pluginslist":
-                    self.plugins = response.json()
-            except TypeError:
-                _LOGGER.error("Can not load data from Glances")
-                raise exceptions.GlancesApiConnectionError(
-                    "Unable to get the data from Glances"
-                )
+        if response.status_code != httpx.codes.OK:
+            raise exceptions.GlancesApiNoDataAvailable(
+                f"endpoint: '{endpoint}' is not valid"
+            )
+        try:
+            _LOGGER.debug(response.json())
+            if endpoint == "all":
+                self.data = response.json()
+            elif endpoint == "pluginslist":
+                self.plugins = response.json()
+        except TypeError:
+            _LOGGER.error("Can not load data from Glances")
+            raise exceptions.GlancesApiConnectionError(
+                "Unable to get the data from Glances"
+            )
 
-    async def get_metrics(self, element):
+    async def get_metrics(self, element: str) -> None:
         """Get all the metrics for a monitored element."""
         await self.get_data("all")
         await self.get_data("pluginslist")
@@ -84,3 +92,97 @@ class Glances(object):
             self.values = self.data[element]
         else:
             raise exceptions.GlancesApiError("Element data not available")
+
+    async def get_ha_sensor_data(self) -> dict[str, Any]:
+        """Create a dictionary with data for Home Assistant sensors."""
+        await self.get_data("all")
+
+        sensor_data: dict[str, Any] = {}
+
+        if disks := self.data.get("fs"):
+            sensor_data["fs"] = {}
+            for disk in disks:
+                disk_free = disk.get("free") or (disk["size"] - disk["used"])
+                sensor_data["fs"][disk["mnt_point"]] = {
+                    "disk_use": round(disk["used"] / 1024**3, 1),
+                    "disk_use_percent": disk["percent"],
+                    "disk_free": round(disk_free / 1024**3, 1),
+                }
+        if data := self.data.get("sensors"):
+            sensor_data["sensors"] = {}
+            for sensor in data:
+                sensor_data["sensors"][sensor["label"]] = {
+                    sensor["type"]: sensor["value"]
+                }
+        if data := self.data.get("mem"):
+            sensor_data["mem"] = {
+                "memory_use_percent": data["percent"],
+                "memory_use": round(data["used"] / 1024**2, 1),
+                "memory_free": round(data["free"] / 1024**2, 1),
+            }
+        if data := self.data.get("memswap"):
+            sensor_data["memswap"] = {
+                "swap_use_percent": data["percent"],
+                "swap_use": round(data["used"] / 1024**3, 1),
+                "swap_free": round(data["free"] / 1024**3, 1),
+            }
+        if data := self.data.get("load"):
+            sensor_data["load"] = {
+                "processor_load": data.get("min15")
+                or self.data["cpu"]["total"]  # to be checked
+            }
+        if data := self.data.get("processcount"):
+            sensor_data["processcount"] = {
+                "process_running": data["running"],
+                "process_total": data["total"],
+                "process_thread": data["thread"],
+                "process_sleeping": data["sleeping"],
+            }
+        if data := self.data.get("quicklook"):
+            sensor_data["cpu"] = {"cpu_use_percent": data["cpu"]}
+        if data := self.data.get("percpu"):
+            sensor_data["percpu"] = {}
+            for cpu in data:
+                sensor_data["percpu"][str(cpu["cpu_number"])] = {
+                    "cpu_use_percent": cpu["total"]
+                }
+        if networks := self.data.get("network"):
+            sensor_data["network"] = {}
+            for network in networks:
+                sensor_data["network"][network["interface_name"]] = {
+                    "is_up": network["is_up"],
+                    "rx": round(network["rx"] / 1024, 1),
+                    "tx": round(network["tx"] / 1024, 1),
+                    "speed": round(network["speed"] / 1024**3, 1),
+                }
+        data = self.data.get("dockers") or self.data.get("containers")
+        if data and (containers_data := data.get("containers")):
+            active_containers = [
+                container
+                for container in containers_data
+                if container["Status"] == "running"
+            ]
+            sensor_data["docker"] = {"docker_active": len(active_containers)}
+            cpu_use = 0.0
+            for container in active_containers:
+                cpu_use += container["cpu"].get("total", 0)
+            sensor_data["docker"]["docker_cpu_use"] = round(cpu_use, 1)
+            mem_use = 0.0
+            for container in active_containers:
+                mem_use += container["memory"].get("usage", 0)
+            sensor_data["docker"]["docker_memory_use"] = round(mem_use / 1024**2, 1)
+        if data := self.data.get("raid"):
+            sensor_data["raid"] = data
+        if data := self.data.get("uptime"):
+            sensor_data["uptime"] = data
+        if data := self.data.get("gpu"):
+            sensor_data["gpu"] = {}
+            for sensor in data:
+                sensor_data["gpu"][f"GPU_{sensor['gpu_id']}__{sensor['name']}"] = {
+                    "name": sensor["name"],
+                    "temperature": sensor["temperature"],
+                    "mem": sensor["mem"],
+                    "proc": sensor["proc"],
+                    "fan_speed": sensor["fan_speed"] if "fan_speed" in sensor else 0,
+                }
+        return sensor_data

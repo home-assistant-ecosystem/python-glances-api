@@ -23,6 +23,10 @@ async def main():
     # Print the values
     print("Disk values:", data.values)
 
+    # Get the data for Home Assistant
+    print("Output to use with Home Assistant")
+    print(await data.get_ha_sensor_data())
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "glances_api"
-version = "0.3.6"
+version = "0.5.0"
 description = "Python API for interacting with Glances"
 authors = ["Fabian Affolter <fabian@affolter-engineering.ch>"]
 homepage = "https://github.com/home-assistant-ecosystem/python-glances-api"
@@ -18,15 +18,38 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 httpx = ">=0.23,<1"
 
 [tool.poetry.dev-dependencies]
-black = "^22.3.0"
-pytest = "^6.2.5"
+black = "^23.3"
+pytest = "^7.3.0"
 pytest-httpx = ">0.15,<1"
 pytest-asyncio = "^0.16.0"
 isort = "^5.10.0"
+mypy = "^0.971"
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+mypy_path = "glances_api/"
+no_implicit_optional = true
+show_error_codes = true
+warn_unreachable = true
+warn_unused_ignores = true
+exclude = [
+    'pyproject.toml',
+]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+allow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "docs.*"
+ignore_errors = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
