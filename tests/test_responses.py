@@ -1,8 +1,11 @@
 """Test the interaction with the Glances API."""
+from typing import Any
+
 import pytest
+from pytest_httpx import HTTPXMock
+
 from glances_api import Glances
 from glances_api.exceptions import GlancesApiNoDataAvailable
-from pytest_httpx import HTTPXMock
 
 PLUGINS_LIST_RESPONSE = [
     "alert",
@@ -17,7 +20,7 @@ PLUGINS_LIST_RESPONSE = [
     "fs",
 ]
 
-RESPONSE = {
+RESPONSE: dict[str, Any] = {
     "cpu": {
         "total": 10.6,
         "user": 7.6,
@@ -241,7 +244,7 @@ RESPONSE = {
     "uptime": "3 days, 10:25:20",
 }
 
-HA_SENSOR_DATA = {
+HA_SENSOR_DATA: dict[str, Any] = {
     "fs": {
         "/ssl": {"disk_use": 30.7, "disk_use_percent": 6.7, "disk_free": 426.5},
         "/media": {"disk_use": 30.7, "disk_use_percent": 6.7, "disk_free": 426.5},
@@ -267,7 +270,7 @@ HA_SENSOR_DATA = {
 
 
 @pytest.mark.asyncio
-async def test_non_existing_endpoint(httpx_mock: HTTPXMock):
+async def test_non_existing_endpoint(httpx_mock: HTTPXMock) -> None:
     """Test a non-exisiting endpoint."""
     httpx_mock.add_response(status_code=400)
 
@@ -279,7 +282,7 @@ async def test_non_existing_endpoint(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.asyncio
-async def test_plugins_list(httpx_mock: HTTPXMock):
+async def test_plugins_list(httpx_mock: HTTPXMock) -> None:
     """Test the plugins list response."""
     httpx_mock.add_response(json=PLUGINS_LIST_RESPONSE)
 
@@ -290,19 +293,19 @@ async def test_plugins_list(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.asyncio
-async def test_exisiting_endpoint(httpx_mock: HTTPXMock):
+async def test_exisiting_endpoint(httpx_mock: HTTPXMock) -> None:
     """Test the a valid endpoint."""
     httpx_mock.add_response(json=RESPONSE)
 
     client = Glances()
     await client.get_metrics("cpu")
-
+    assert client.values
     assert client.values["total"] == 10.6
     assert client.values["system"] == 2.1
 
 
 @pytest.mark.asyncio
-async def test_ha_sensor_data(httpx_mock: HTTPXMock):
+async def test_ha_sensor_data(httpx_mock: HTTPXMock) -> None:
     """Test the return value for ha sensors."""
     httpx_mock.add_response(json=RESPONSE)
 
@@ -315,21 +318,21 @@ async def test_ha_sensor_data(httpx_mock: HTTPXMock):
 @pytest.mark.asyncio
 async def test_ha_sensor_data_with_incomplete_container_information(
     httpx_mock: HTTPXMock,
-):
-    """Test the return value for ha sensors when container memory and cpu data is not exposed by glances."""
-    TEST_RESPONSE = RESPONSE
-    del TEST_RESPONSE["containers"]["containers"][0]["memory"]["usage"]
-    del TEST_RESPONSE["containers"]["containers"][0]["cpu"]["total"]
-    del TEST_RESPONSE["containers"]["containers"][1]["memory"]["usage"]
-    del TEST_RESPONSE["containers"]["containers"][1]["cpu"]["total"]
+) -> None:
+    """Test the return value for ha sensors when some data is not exposed."""
+    response = RESPONSE.copy()
+    del response["containers"]["containers"][0]["memory"]["usage"]
+    del response["containers"]["containers"][0]["cpu"]["total"]
+    del response["containers"]["containers"][1]["memory"]["usage"]
+    del response["containers"]["containers"][1]["cpu"]["total"]
 
-    TEST_HA_SENSOR_DATA = HA_SENSOR_DATA
-    TEST_HA_SENSOR_DATA["docker"]["docker_memory_use"] = 0
-    TEST_HA_SENSOR_DATA["docker"]["docker_cpu_use"] = 0
+    ha_sensor_data = HA_SENSOR_DATA.copy()
+    ha_sensor_data["docker"]["docker_memory_use"] = 0
+    ha_sensor_data["docker"]["docker_cpu_use"] = 0
 
-    httpx_mock.add_response(json=TEST_RESPONSE)
+    httpx_mock.add_response(json=response)
 
     client = Glances()
     result = await client.get_ha_sensor_data()
 
-    assert result == TEST_HA_SENSOR_DATA
+    assert result == ha_sensor_data

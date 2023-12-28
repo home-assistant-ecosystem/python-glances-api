@@ -35,7 +35,7 @@ class Glances:
         self.url = f"{schema}://{host}:{port}/api/{version}"
         self.data: dict[str, Any] = {}
         self.plugins: list[str] = []
-        self.values: Any | None = None
+        self.values: dict[str, Any] | None = None
         self.username = username
         self.password = password
         self.verify_ssl = verify_ssl
@@ -45,7 +45,7 @@ class Glances:
         """Retrieve the data."""
         url = f"{self.url}/{endpoint}"
 
-        httpx_client: Any = (
+        httpx_client = (
             self.httpx_client
             if self.httpx_client
             else httpx.AsyncClient(verify=self.verify_ssl)
@@ -55,12 +55,16 @@ class Glances:
             async with httpx_client as client:
                 if self.password is None:
                     response = await client.get(url)
-                else:
+                elif self.username is not None:
                     response = await client.get(
                         url, auth=(self.username, self.password)
                     )
-        except (httpx.ConnectError, httpx.TimeoutException):
-            raise exceptions.GlancesApiConnectionError(f"Connection to {url} failed")
+                else:
+                    raise ValueError("username and password must be provided.")
+        except (httpx.ConnectError, httpx.TimeoutException) as err:
+            raise exceptions.GlancesApiConnectionError(
+                f"Connection to {url} failed"
+            ) from err
 
         if response.status_code == httpx.codes.UNAUTHORIZED:
             raise exceptions.GlancesApiAuthorizationError(
@@ -77,11 +81,11 @@ class Glances:
                 self.data = response.json()
             elif endpoint == "pluginslist":
                 self.plugins = response.json()
-        except TypeError:
+        except TypeError as err:
             _LOGGER.error("Can not load data from Glances")
             raise exceptions.GlancesApiConnectionError(
                 "Unable to get the data from Glances"
-            )
+            ) from err
 
     async def get_metrics(self, element: str) -> None:
         """Get all the metrics for a monitored element."""
