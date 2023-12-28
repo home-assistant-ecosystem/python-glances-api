@@ -150,7 +150,7 @@ class Glances:
             sensor_data["network"] = {}
             for network in networks:
                 sensor_data["network"][network["interface_name"]] = {
-                    "is_up": network["is_up"],
+                    "is_up": network.get("is_up"),
                     "rx": round(network["rx"] / 1024, 1),
                     "tx": round(network["tx"] / 1024, 1),
                     "speed": round(network["speed"] / 1024**3, 1),
