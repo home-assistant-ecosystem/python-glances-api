@@ -7,7 +7,7 @@ from glances_api import Glances, exceptions
 
 
 @pytest.mark.asyncio
-async def test_timeout(httpx_mock: HTTPXMock):
+async def test_timeout(httpx_mock: HTTPXMock) -> None:
     """Test if the connection is hitting the timeout."""
 
     def raise_timeout(request):
