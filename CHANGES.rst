@@ -1,6 +1,12 @@
 Changes
 =======
 
+0.5.1 - 2024-01-11
+------------------
+
+- Add guard for glances v2 (Thanks @engrbm87)
+- Add missing type hints (Thanks @engrbm87)
+
 0.5.0 - 2023-11-17
 ------------------
 
