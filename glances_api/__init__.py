@@ -156,8 +156,8 @@ class Glances:
                 time_since_update = network["time_since_update"]
                 sensor_data["network"][network["interface_name"]] = {
                     "is_up": network.get("is_up"),
-                    "rx": round(network["rx"] / time_since_update * 8, 1),
-                    "tx": round(network["tx"] / time_since_update * 8 , 1),
+                    "rx": round(network["rx"] / time_since_update * 8),
+                    "tx": round(network["tx"] / time_since_update * 8),
                     "speed": round(network["speed"] / 1024**3, 1),
                 }
         data = self.data.get("dockers") or self.data.get("containers")
