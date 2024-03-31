@@ -256,10 +256,10 @@ HA_SENSOR_DATA: dict[str, Any] = {
         "memory_free": 2745.0,
     },
     "network": {
-        "lo": {"is_up": True, "rx": 61171, "tx": 61171, "speed": 0.0},
+        "lo": {"is_up": True, "rx": 7646, "tx": 7646, "speed": 0.0},
         "bond0": {"is_up": False, "rx": 0.0, "tx": 0.0, "speed": 64.0},
         "dummy0": {"is_up": False, "rx": 0.0, "tx": 0.0, "speed": 0.0},
-        "eth0": {"is_up": True, "rx": 31623, "tx": 47964, "speed": 9.8},
+        "eth0": {"is_up": True, "rx": 3953, "tx": 5995, "speed": 9.8},
         "tunl0": {"is_up": False, "rx": 0.0, "tx": 0.0, "speed": 0.0},
         "sit0": {"is_up": False, "rx": 0.0, "tx": 0.0, "speed": 0.0},
     },
