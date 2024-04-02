@@ -130,6 +130,27 @@ RESPONSE: dict[str, Any] = {
             "key": "mnt_point",
         },
     ],
+    "gpu": [
+        {
+            "key": "gpu_id",
+            "gpu_id": 0,
+            "name": "NVIDIA GeForce RTX 4080",
+            "mem": 13.333489176233513,
+            "proc": 12,
+            "temperature": 38,
+            "fan_speed": 30
+        },
+        {
+            "key": "gpu_id",
+            "gpu_id": 1,
+            "name": "NVIDIA GeForce RTX 3080",
+            "mem": 8.41064453125,
+            "proc": 26,
+            "temperature": 51,
+            "fan_speed": 0
+        },
+
+    ],
     "mem": {
         "total": 3976318976,
         "available": 2878337024,
@@ -266,6 +287,20 @@ HA_SENSOR_DATA: dict[str, Any] = {
     "docker": {"docker_active": 2, "docker_cpu_use": 77.2, "docker_memory_use": 1149.6},
     "uptime": "3 days, 10:25:20",
     "percpu": {"0": {"cpu_use_percent": 22.1}, "1": {"cpu_use_percent": 17.2}},
+    "gpu": {
+        "NVIDIA GeForce RTX 4080 (GPU 0)": {
+            "mem": 13.333489176233513,
+            "proc": 12,
+            "temperature": 38,
+            "fan_speed": 30,
+        },
+        "NVIDIA GeForce RTX 3080 (GPU 1)": {
+            "mem": 8.41064453125,
+            "proc": 26,
+            "temperature": 51,
+            "fan_speed": 0,
+        },
+    },
 }
 
 
