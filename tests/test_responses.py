@@ -1,4 +1,5 @@
 """Test the interaction with the Glances API."""
+
 from typing import Any
 
 import pytest
@@ -69,6 +70,15 @@ RESPONSE: dict[str, Any] = {
             "write_count": 466,
             "read_bytes": 184320,
             "write_bytes": 23863296,
+            "key": "disk_name",
+        },
+        {
+            "time_since_update": 142.23511338233948,
+            "disk_name": "sda",
+            "read_count": 34,
+            "write_count": 254,
+            "read_bytes": 548864,
+            "write_bytes": 3691520,
             "key": "disk_name",
         },
     ],
@@ -266,6 +276,10 @@ HA_SENSOR_DATA: dict[str, Any] = {
     "docker": {"docker_active": 2, "docker_cpu_use": 77.2, "docker_memory_use": 1149.6},
     "uptime": "3 days, 10:25:20",
     "percpu": {"0": {"cpu_use_percent": 22.1}, "1": {"cpu_use_percent": 17.2}},
+    "diskio": {
+        "nvme0n1": {"read": 184320, "write": 23863296},
+        "sda": {"read": 3859, "write": 25954},
+    },
 }
 
 
