@@ -1,4 +1,5 @@
 """Test the interaction with the Glances API."""
+
 from typing import Any
 
 import pytest
@@ -138,7 +139,7 @@ RESPONSE: dict[str, Any] = {
             "mem": 13.333489176233513,
             "proc": 12,
             "temperature": 38,
-            "fan_speed": 30
+            "fan_speed": 30,
         },
         {
             "key": "gpu_id",
@@ -147,9 +148,8 @@ RESPONSE: dict[str, Any] = {
             "mem": 8.41064453125,
             "proc": 26,
             "temperature": 51,
-            "fan_speed": 0
+            "fan_speed": 0,
         },
-
     ],
     "mem": {
         "total": 3976318976,
