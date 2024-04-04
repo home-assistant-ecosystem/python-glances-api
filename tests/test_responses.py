@@ -140,6 +140,26 @@ RESPONSE: dict[str, Any] = {
             "key": "mnt_point",
         },
     ],
+    "gpu": [
+        {
+            "key": "gpu_id",
+            "gpu_id": 0,
+            "name": "NVIDIA GeForce RTX 4080",
+            "mem": 13.333489176233513,
+            "proc": 12,
+            "temperature": 38,
+            "fan_speed": 30,
+        },
+        {
+            "key": "gpu_id",
+            "gpu_id": 1,
+            "name": "NVIDIA GeForce RTX 3080",
+            "mem": 8.41064453125,
+            "proc": 26,
+            "temperature": 51,
+            "fan_speed": 0,
+        },
+    ],
     "mem": {
         "total": 3976318976,
         "available": 2878337024,
@@ -266,10 +286,10 @@ HA_SENSOR_DATA: dict[str, Any] = {
         "memory_free": 2745.0,
     },
     "network": {
-        "lo": {"is_up": True, "rx": 11.6, "tx": 11.6, "speed": 0.0},
+        "lo": {"is_up": True, "rx": 7646, "tx": 7646, "speed": 0.0},
         "bond0": {"is_up": False, "rx": 0.0, "tx": 0.0, "speed": 64.0},
         "dummy0": {"is_up": False, "rx": 0.0, "tx": 0.0, "speed": 0.0},
-        "eth0": {"is_up": True, "rx": 6.0, "tx": 9.1, "speed": 9.8},
+        "eth0": {"is_up": True, "rx": 3953, "tx": 5995, "speed": 9.8},
         "tunl0": {"is_up": False, "rx": 0.0, "tx": 0.0, "speed": 0.0},
         "sit0": {"is_up": False, "rx": 0.0, "tx": 0.0, "speed": 0.0},
     },
@@ -279,6 +299,19 @@ HA_SENSOR_DATA: dict[str, Any] = {
     "diskio": {
         "nvme0n1": {"read": 184320, "write": 23863296},
         "sda": {"read": 3859, "write": 25954},
+    "gpu": {
+        "NVIDIA GeForce RTX 4080 (GPU 0)": {
+            "mem": 13.333489176233513,
+            "proc": 12,
+            "temperature": 38,
+            "fan_speed": 30,
+        },
+        "NVIDIA GeForce RTX 3080 (GPU 1)": {
+            "mem": 8.41064453125,
+            "proc": 26,
+            "temperature": 51,
+            "fan_speed": 0,
+        },
     },
 }
 

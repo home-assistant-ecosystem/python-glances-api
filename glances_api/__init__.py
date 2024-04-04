@@ -154,10 +154,11 @@ class Glances:
         if networks := self.data.get("network"):
             sensor_data["network"] = {}
             for network in networks:
+                time_since_update = network["time_since_update"]
                 sensor_data["network"][network["interface_name"]] = {
                     "is_up": network.get("is_up"),
-                    "rx": round(network["rx"] / 1024, 1),
-                    "tx": round(network["tx"] / 1024, 1),
+                    "rx": round(network["rx"] / time_since_update),
+                    "tx": round(network["tx"] / time_since_update),
                     "speed": round(network["speed"] / 1024**3, 1),
                 }
         data = self.data.get("dockers") or self.data.get("containers")
@@ -183,12 +184,11 @@ class Glances:
         if data := self.data.get("gpu"):
             sensor_data["gpu"] = {}
             for sensor in data:
-                sensor_data["gpu"][f"GPU_{sensor['gpu_id']}__{sensor['name']}"] = {
-                    "name": sensor["name"],
-                    "temperature": sensor["temperature"],
-                    "mem": sensor["mem"],
-                    "proc": sensor["proc"],
-                    "fan_speed": sensor["fan_speed"] if "fan_speed" in sensor else 0,
+                sensor_data["gpu"][f"{sensor['name']} (GPU {sensor['gpu_id']})"] = {
+                    "temperature": sensor.get("temperature", 0),
+                    "mem": sensor.get("mem", 0),
+                    "proc": sensor.get("proc", 0),
+                    "fan_speed": sensor.get("fan_speed", 0),
                 }
         if data := self.data.get("diskio"):
             sensor_data["diskio"] = {}
