@@ -299,6 +299,7 @@ HA_SENSOR_DATA: dict[str, Any] = {
     "diskio": {
         "nvme0n1": {"read": 184320, "write": 23863296},
         "sda": {"read": 3859, "write": 25954},
+    },
     "gpu": {
         "NVIDIA GeForce RTX 4080 (GPU 0)": {
             "mem": 13.333489176233513,
