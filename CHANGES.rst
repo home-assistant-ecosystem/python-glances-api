@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.6.0 - 2024-02-04
+------------------
+
+- Fix network RX and TX for Home Assistant (bytes/s) (Thanks @wittypluck)
+- Reformat GPU data for Home Assistant and add unit test (Thanks @wittypluck)
+- Add diskio sensors for Home Assistant (in bytes/second) (Thanks @wittypluck)
+- Support for Python 3.12, pytest > 8
+
 0.5.1 - 2024-01-11
 ------------------
 
