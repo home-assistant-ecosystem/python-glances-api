@@ -183,11 +183,10 @@ class Glances:
         if data := self.data.get("gpu"):
             sensor_data["gpu"] = {}
             for sensor in data:
-                sensor_data["gpu"][f"GPU_{sensor['gpu_id']}__{sensor['name']}"] = {
-                    "name": sensor["name"],
-                    "temperature": sensor["temperature"],
-                    "mem": sensor["mem"],
-                    "proc": sensor["proc"],
-                    "fan_speed": sensor["fan_speed"] if "fan_speed" in sensor else 0,
+                sensor_data["gpu"][f"{sensor['name']} (GPU {sensor['gpu_id']})"] = {
+                    "temperature": sensor.get("temperature", 0),
+                    "mem": sensor.get("mem", 0),
+                    "proc": sensor.get("proc", 0),
+                    "fan_speed": sensor.get("fan_speed", 0),
                 }
         return sensor_data
