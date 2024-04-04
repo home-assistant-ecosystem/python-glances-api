@@ -1,4 +1,5 @@
 """Client to interact with the Glances API."""
+
 from __future__ import annotations
 
 import logging
@@ -188,5 +189,13 @@ class Glances:
                     "mem": sensor.get("mem", 0),
                     "proc": sensor.get("proc", 0),
                     "fan_speed": sensor.get("fan_speed", 0),
+                }
+        if data := self.data.get("diskio"):
+            sensor_data["diskio"] = {}
+            for disk in data:
+                time_since_update = disk["time_since_update"]
+                sensor_data["diskio"][disk["disk_name"]] = {
+                    "read": round(disk["read_bytes"] / time_since_update),
+                    "write": round(disk["write_bytes"] / time_since_update),
                 }
         return sensor_data
