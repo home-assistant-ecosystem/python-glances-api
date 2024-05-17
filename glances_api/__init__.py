@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from enum import Enum
 from typing import Any
 
 import httpx
@@ -10,6 +11,21 @@ import httpx
 from . import exceptions
 
 _LOGGER = logging.getLogger(__name__)
+
+
+class SensorType(str, Enum):
+    CPU_TEMP = "temperature_core"
+    FAN_SPEED = "fan_speed"
+    HDD_TEMP = "temperature_hdd"
+    BATTERY = "battery"
+
+    @staticmethod
+    def type_to_str(str_type: str) -> str:
+        """Convert Enum type string to string (v4) or return input (v3)"""
+        for sensor_type in SensorType:
+            if str_type == str(sensor_type):
+                return sensor_type.value
+        return str_type
 
 
 class Glances:
@@ -117,7 +133,7 @@ class Glances:
             sensor_data["sensors"] = {}
             for sensor in data:
                 sensor_data["sensors"][sensor["label"]] = {
-                    sensor["type"]: sensor["value"]
+                    SensorType.type_to_str(sensor["type"]): sensor["value"]
                 }
         if data := self.data.get("mem"):
             sensor_data["mem"] = {

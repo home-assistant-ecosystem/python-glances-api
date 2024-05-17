@@ -276,7 +276,16 @@ RESPONSE: dict[str, Any] = {
             "unit": "C",
             "type": "temperature_core",
             "key": "label",
-        }
+        },
+        {
+            "label": "cpu_thermal 0",
+            "unit": "C",
+            "value": 50,
+            "warning": 110,
+            "critical": 110,
+            "type": "SensorType.CPU_TEMP",
+            "key": "label",
+        },
     ],
     "system": {
         "os_name": "Linux",
@@ -294,7 +303,10 @@ HA_SENSOR_DATA: dict[str, Any] = {
         "/ssl": {"disk_use": 30.7, "disk_use_percent": 6.7, "disk_free": 426.5},
         "/media": {"disk_use": 30.7, "disk_use_percent": 6.7, "disk_free": 426.5},
     },
-    "sensors": {"cpu_thermal 1": {"temperature_core": 59}},
+    "sensors": {
+        "cpu_thermal 1": {"temperature_core": 59},
+        "cpu_thermal 0": {"temperature_core": 50},
+    },
     "mem": {
         "memory_use_percent": 27.6,
         "memory_use": 1047.1,
