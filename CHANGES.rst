@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.7.0 - 2024-05-21
+------------------
+
+- Add support for Glances v4 network sensors (Thanks @wittypluck)
+
 0.6.0 - 2024-02-04
 ------------------
 
