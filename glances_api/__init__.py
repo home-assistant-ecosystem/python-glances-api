@@ -172,19 +172,20 @@ class Glances:
                 }
         containers_data = None
         if self.version >= 4:
-            #Glances v4 provides a list of containers
+            # Glances v4 provides a list of containers
             containers_data = self.data.get("containers")
         else:
-            #Glances v3 and earlier provide a dict, with containers inside a list in this dict
-            #Key is "dockers" in 3.3 and before, and "containers" in 3.4
+            # Glances v3 and earlier provide a dict, with containers inside a list in this dict
+            # Key is "dockers" in 3.3 and before, and "containers" in 3.4
             data = self.data.get("dockers") or self.data.get("containers")
             containers_data = data.get("containers") if data else None
         if containers_data:
             active_containers = [
                 container
                 for container in containers_data
-                #"status" since Glance v4, "Status" in v3 and earlier
-                if container.get("status") == "running" or container.get("Status") == "running"
+                # "status" since Glance v4, "Status" in v3 and earlier
+                if container.get("status") == "running"
+                or container.get("Status") == "running"
             ]
             sensor_data["docker"] = {"docker_active": len(active_containers)}
             cpu_use = 0.0
