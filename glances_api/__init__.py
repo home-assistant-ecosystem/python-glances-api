@@ -171,14 +171,14 @@ class Glances:
                     "speed": round(network["speed"] / 1024**3, 1),
                 }
         containers_data = None
-        if self.version >= 4:
-            # Glances v4 provides a list of containers
-            containers_data = self.data.get("containers")
-        else:
+        if self.version <= 3:
             # Glances v3 and earlier provide a dict, with containers inside a list in this dict
             # Key is "dockers" in 3.3 and before, and "containers" in 3.4
             data = self.data.get("dockers") or self.data.get("containers")
             containers_data = data.get("containers") if data else None
+        else:
+            # Glances v4 provides a list of containers
+            containers_data = self.data.get("containers")
         if containers_data:
             active_containers = [
                 container
