@@ -251,21 +251,6 @@ RESPONSE: dict[str, Any] = {
             "time_since_update": 1.55433297157288,
             "tx": 0,
         },
-        {
-            "bytes_sent": 1070106,
-            "bytes_recv": 163781155,
-            "speed": 1048576000,
-            "key": "interface_name",
-            "interface_name": "eth0_v4",
-            "bytes_all": 164851261,
-            "time_since_update": 25.680001497268677,
-            "bytes_recv_gauge": 5939087689,
-            "bytes_recv_rate_per_sec": 6377770.0,
-            "bytes_sent_gauge": 82538934,
-            "bytes_sent_rate_per_sec": 41670.0,
-            "bytes_all_gauge": 6021626623,
-            "bytes_all_rate_per_sec": 6419441.0,
-        },
     ],
     "sensors": [
         {
@@ -307,7 +292,6 @@ HA_SENSOR_DATA: dict[str, Any] = {
         "eth0": {"is_up": True, "rx": 3953, "tx": 5995, "speed": 9.8},
         "tunl0": {"is_up": False, "rx": 0.0, "tx": 0.0, "speed": 0.0},
         "sit0": {"is_up": False, "rx": 0.0, "tx": 0.0, "speed": 0.0},
-        "eth0_v4": {"is_up": None, "rx": 6377770.0, "speed": 1.0, "tx": 41670.0},
     },
     "docker": {"docker_active": 2, "docker_cpu_use": 77.2, "docker_memory_use": 1149.6},
     "uptime": "3 days, 10:25:20",
@@ -329,6 +313,69 @@ HA_SENSOR_DATA: dict[str, Any] = {
             "temperature": 51,
             "fan_speed": 0,
         },
+    },
+}
+
+RESPONSE_V4: dict[str, Any] = {
+    "containers": [
+        {
+            "key": "name",
+            "name": "container1",
+            "id": "1234",
+            "status": "running",
+            "created": "2024-06-07T09:21:57.688106748Z",
+            "command": "./command",
+            "image": ["image1/latest"],
+            "io": {},
+            "memory": {},
+            "network": {},
+            "cpu": {"total": 0.37484029484029485},
+            "cpu_percent": 0.37484029484029485,
+            "memory_usage": None,
+            "uptime": "28 secs",
+            "engine": "docker",
+        },
+        {
+            "key": "name",
+            "name": "container2",
+            "id": "5678",
+            "status": "running",
+            "created": "2023-08-23T21:54:50.745112185Z",
+            "command": "./command",
+            "image": ["image2:latest"],
+            "io": {"cumulative_ior": 36413440, "cumulative_iow": 0},
+            "memory": {},
+            "network": {"cumulative_rx": 12012442, "cumulative_tx": 45791653},
+            "cpu": {"total": 0.0},
+            "cpu_percent": 0.0,
+            "memory_usage": None,
+            "uptime": "3 days",
+            "engine": "docker",
+        },
+    ],
+    "network": [
+        {
+            "bytes_sent": 1070106,
+            "bytes_recv": 163781155,
+            "speed": 1048576000,
+            "key": "interface_name",
+            "interface_name": "eth0",
+            "bytes_all": 164851261,
+            "time_since_update": 25.680001497268677,
+            "bytes_recv_gauge": 5939087689,
+            "bytes_recv_rate_per_sec": 6377770.0,
+            "bytes_sent_gauge": 82538934,
+            "bytes_sent_rate_per_sec": 41670.0,
+            "bytes_all_gauge": 6021626623,
+            "bytes_all_rate_per_sec": 6419441.0,
+        },
+    ],
+}
+
+HA_SENSOR_DATA_V4: dict[str, Any] = {
+    "docker": {"docker_active": 2, "docker_cpu_use": 0.4, "docker_memory_use": 0.0},
+    "network": {
+        "eth0": {"is_up": None, "rx": 6377770.0, "speed": 1.0, "tx": 41670.0},
     },
 }
 
@@ -369,14 +416,20 @@ async def test_exisiting_endpoint(httpx_mock: HTTPXMock) -> None:
 
 
 @pytest.mark.asyncio
-async def test_ha_sensor_data(httpx_mock: HTTPXMock) -> None:
+@pytest.mark.parametrize(
+    ("version", "response", "expected"),
+    [(3, RESPONSE, HA_SENSOR_DATA), (4, RESPONSE_V4, HA_SENSOR_DATA_V4)],
+)
+async def test_ha_sensor_data(
+    httpx_mock: HTTPXMock, version: int, response: dict, expected: dict
+) -> None:
     """Test the return value for ha sensors."""
-    httpx_mock.add_response(json=RESPONSE)
+    httpx_mock.add_response(json=response)
 
-    client = Glances()
+    client = Glances(version=version)
     result = await client.get_ha_sensor_data()
 
-    assert result == HA_SENSOR_DATA
+    assert result == expected
 
 
 @pytest.mark.asyncio

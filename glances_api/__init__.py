@@ -155,15 +155,17 @@ class Glances:
         if networks := self.data.get("network"):
             sensor_data["network"] = {}
             for network in networks:
-                time_since_update = network["time_since_update"]
-                # New name of network sensors in Glances v4
-                rx = network.get("bytes_recv_rate_per_sec")
-                tx = network.get("bytes_sent_rate_per_sec")
-                # Compatibility with Glances v3
-                if rx is None and (rx_bytes := network.get("rx")) is not None:
-                    rx = round(rx_bytes / time_since_update)
-                if tx is None and (tx_bytes := network.get("tx")) is not None:
-                    tx = round(tx_bytes / time_since_update)
+                rx = tx = None
+                if self.version <= 3:
+                    time_since_update = network["time_since_update"]
+                    if (rx_bytes := network.get("rx")) is not None:
+                        rx = round(rx_bytes / time_since_update)
+                    if (tx_bytes := network.get("tx")) is not None:
+                        tx = round(tx_bytes / time_since_update)
+                else:
+                    # New network sensors in Glances v4
+                    rx = network.get("bytes_recv_rate_per_sec")
+                    tx = network.get("bytes_sent_rate_per_sec")
                 sensor_data["network"][network["interface_name"]] = {
                     "is_up": network.get("is_up"),
                     "rx": rx,
