@@ -41,6 +41,7 @@ class Glances:
         self.password = password
         self.verify_ssl = verify_ssl
         self.httpx_client = httpx_client
+        self.version = version
 
     async def get_data(self, endpoint: str) -> None:
         """Retrieve the data."""
@@ -154,27 +155,39 @@ class Glances:
         if networks := self.data.get("network"):
             sensor_data["network"] = {}
             for network in networks:
-                time_since_update = network["time_since_update"]
-                # New name of network sensors in Glances v4
-                rx = network.get("bytes_recv_rate_per_sec")
-                tx = network.get("bytes_sent_rate_per_sec")
-                # Compatibility with Glances v3
-                if rx is None and (rx_bytes := network.get("rx")) is not None:
-                    rx = round(rx_bytes / time_since_update)
-                if tx is None and (tx_bytes := network.get("tx")) is not None:
-                    tx = round(tx_bytes / time_since_update)
+                rx = tx = None
+                if self.version <= 3:
+                    time_since_update = network["time_since_update"]
+                    if (rx_bytes := network.get("rx")) is not None:
+                        rx = round(rx_bytes / time_since_update)
+                    if (tx_bytes := network.get("tx")) is not None:
+                        tx = round(tx_bytes / time_since_update)
+                else:
+                    # New network sensors in Glances v4
+                    rx = network.get("bytes_recv_rate_per_sec")
+                    tx = network.get("bytes_sent_rate_per_sec")
                 sensor_data["network"][network["interface_name"]] = {
                     "is_up": network.get("is_up"),
                     "rx": rx,
                     "tx": tx,
                     "speed": round(network["speed"] / 1024**3, 1),
                 }
-        data = self.data.get("dockers") or self.data.get("containers")
-        if data and (containers_data := data.get("containers")):
+        containers_data = None
+        if self.version <= 3:
+            # Glances v3 and earlier provide a dict, with containers inside a list in this dict
+            # Key is "dockers" in 3.3 and before, and "containers" in 3.4
+            data = self.data.get("dockers") or self.data.get("containers")
+            containers_data = data.get("containers") if data else None
+        else:
+            # Glances v4 provides a list of containers
+            containers_data = self.data.get("containers")
+        if containers_data:
             active_containers = [
                 container
                 for container in containers_data
-                if container["Status"] == "running"
+                # "status" since Glance v4, "Status" in v3 and earlier
+                if container.get("status") == "running"
+                or container.get("Status") == "running"
             ]
             sensor_data["docker"] = {"docker_active": len(active_containers)}
             cpu_use = 0.0
