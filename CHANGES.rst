@@ -2,6 +2,7 @@ Changes
 =======
 
 0.8.0 - 2024-06-09
+------------------
 
 - Add/improve support for Glances v4 container & network format and improve v4 unit tests (Thanks @wittypluck)
 
