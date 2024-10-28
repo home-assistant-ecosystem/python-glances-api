@@ -134,8 +134,9 @@ class Glances:
             }
         if data := self.data.get("load"):
             sensor_data["load"] = {
-                "processor_load": data.get("min15")
-                or self.data["cpu"]["total"]  # to be checked
+                "processor_load": data.get("min15"),
+                "processor_load_1m": data.get("min1"),
+                "processor_load_5m": data.get("min5"),
             }
         if data := self.data.get("processcount"):
             sensor_data["processcount"] = {
