@@ -314,6 +314,16 @@ HA_SENSOR_DATA: dict[str, Any] = {
             "fan_speed": 0,
         },
     },
+    "containers": {
+        "container1": {
+            "container_cpu_use": 50.9,
+            "container_memory_use": 1068.4,
+        },
+        "container2": {
+            "container_cpu_use": 26.2,
+            "container_memory_use": 81.2,
+        },
+    },
 }
 
 RESPONSE_V4: dict[str, Any] = {
@@ -377,6 +387,16 @@ HA_SENSOR_DATA_V4: dict[str, Any] = {
     "network": {
         "eth0": {"is_up": None, "rx": 6377770.0, "speed": 1.0, "tx": 41670.0},
     },
+    "containers": {
+        "container1": {
+            "container_cpu_use": 0.4,
+            "container_memory_use": 0.0,
+        },
+        "container2": {
+            "container_cpu_use": 0.0,
+            "container_memory_use": 0.0,
+        },
+    },
 }
 
 
@@ -404,6 +424,7 @@ async def test_plugins_list(httpx_mock: HTTPXMock) -> None:
 
 
 @pytest.mark.asyncio
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_exisiting_endpoint(httpx_mock: HTTPXMock) -> None:
     """Test the a valid endpoint."""
     httpx_mock.add_response(json=RESPONSE)
@@ -446,6 +467,10 @@ async def test_ha_sensor_data_with_incomplete_container_information(
     ha_sensor_data = HA_SENSOR_DATA.copy()
     ha_sensor_data["docker"]["docker_memory_use"] = 0
     ha_sensor_data["docker"]["docker_cpu_use"] = 0
+    ha_sensor_data["containers"]["container1"]["container_memory_use"] = 0
+    ha_sensor_data["containers"]["container1"]["container_cpu_use"] = 0
+    ha_sensor_data["containers"]["container2"]["container_memory_use"] = 0
+    ha_sensor_data["containers"]["container2"]["container_cpu_use"] = 0
 
     httpx_mock.add_response(json=response)
 
