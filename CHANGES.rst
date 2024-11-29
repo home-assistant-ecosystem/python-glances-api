@@ -5,7 +5,7 @@ Changes
 ------------------
 
 - Add support for Glances containers (Thanks @pszypowicz)
-- Fix tests with pytest-httpx 0.32.0 (Thanks #mweinelt)
+- Fix tests with pytest-httpx 0.32.0 (Thanks @mweinelt)
 
 0.8.0 - 2024-06-09
 ------------------
