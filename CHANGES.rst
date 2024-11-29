@@ -1,10 +1,11 @@
 Changes
 =======
 
-0.9.0 - 2024-11-15
+0.9.0 - 2024-11-29
 ------------------
 
-- Add support for Glances containers
+- Add support for Glances containers (Thanks @pszypowicz)
+- Fix tests with pytest-httpx 0.32.0 (Thanks #mweinelt)
 
 0.8.0 - 2024-06-09
 ------------------
