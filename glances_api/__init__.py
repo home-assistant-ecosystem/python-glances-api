@@ -183,6 +183,7 @@ class Glances:
             # Glances v4 provides a list of containers
             containers_data = self.data.get("containers")
         if containers_data:
+            sensor_data["containers"] = {}
             active_containers = [
                 container
                 for container in containers_data
@@ -199,6 +200,13 @@ class Glances:
             for container in active_containers:
                 mem_use += container["memory"].get("usage", 0)
             sensor_data["docker"]["docker_memory_use"] = round(mem_use / 1024**2, 1)
+            for container in active_containers:
+                sensor_data["containers"][container["name"]] = {
+                    "container_cpu_use": round(container["cpu"].get("total", 0), 1),
+                    "container_memory_use": round(
+                        container["memory"].get("usage", 0) / 1024**2, 1
+                    ),
+                }
         if data := self.data.get("raid"):
             sensor_data["raid"] = data
         if data := self.data.get("uptime"):

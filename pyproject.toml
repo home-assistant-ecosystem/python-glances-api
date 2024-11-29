@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "glances_api"
-version = "0.8.0"
+version = "0.9.0"
 description = "Python API for interacting with Glances"
 authors = ["Fabian Affolter <fabian@affolter-engineering.ch>"]
 homepage = "https://github.com/home-assistant-ecosystem/python-glances-api"
