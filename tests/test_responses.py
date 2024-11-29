@@ -404,6 +404,7 @@ async def test_plugins_list(httpx_mock: HTTPXMock) -> None:
 
 
 @pytest.mark.asyncio
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_exisiting_endpoint(httpx_mock: HTTPXMock) -> None:
     """Test the a valid endpoint."""
     httpx_mock.add_response(json=RESPONSE)
