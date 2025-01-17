@@ -1,32 +1,31 @@
 python-glances-api
 ==================
 
-A Python client for interacting with `Glances <https://nicolargo.github.io/glances/>`_.
+A Python client for interacting with [Glances](https://nicolargo.github.io/glances/).
 
 This module is not official, developed, supported or endorsed by Glances.
 
 Installation
 ------------
 
-The module is available from the `Python Package Index <https://pypi.python.org/pypi>`_.
+The module is available from the [Python Package Index](https://pypi.python.org/pypi).
 
-.. code:: bash
-
-    $ pip3 install glances_api
+```bash
+$ pip3 install glances_api
+```
 
 Or on a Fedora-based system or on a CentOS/RHEL machine with has EPEL enabled.
 
-.. code:: bash
+```bash
+$ sudo dnf -y install python3-glances-api
+```
 
-    $ sudo dnf -y install python3-glances-api
-
-
-For Nix or NixOS is `pre-packed module <https://search.nixos.org/packages?channel=unstable&query=glances-api>`_
+For Nix or NixOS is[ pre-packed module](https://search.nixos.org/packages?channel=unstable&query=glances-api)
 available. The lastest release is usually present in the ``unstable`` channel.
 
-.. code:: bash
-
-    $ nix-env -iA nixos.python3Packages.glances-api
+```bash
+$ nix-env -iA nixos.python3Packages.glances-api
+```
 
 Usage
 -----
