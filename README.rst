@@ -37,3 +37,5 @@ License
 -------
 
 ``python-glances-api`` is licensed under MIT, for more details check LICENSE.
+
+[<img src="https://api.gitsponsors.com/api/badge/img?id=144764002" height="20">](https://api.gitsponsors.com/api/badge/link?p=p8Zg4Ga8E3c4sh/3JYWJu5r3D75X2agLa2L9weFuwGLxEPF1mG9CKRAMinpnzeKX+RK86QKe8cdnqpisdPVl+DiE7jVzIsmpKp0zg00g6TflWtWOt3Bbby5iwSCbOo89KSC8H6sWa61NSOSf4/K4dw==)
