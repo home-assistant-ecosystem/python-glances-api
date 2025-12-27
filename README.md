@@ -21,7 +21,7 @@ $ sudo dnf -y install python3-glances-api
 ```
 
 For Nix or NixOS is[ pre-packed module](https://search.nixos.org/packages?channel=unstable&query=glances-api)
-available. The lastest release is usually present in the ``unstable`` channel.
+available. The latest release is usually present in the ``unstable`` channel.
 
 ```bash
 $ nix-env -iA nixos.python3Packages.glances-api
