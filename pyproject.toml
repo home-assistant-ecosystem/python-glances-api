@@ -5,7 +5,7 @@ description = "Python API for interacting with Glances"
 authors = ["Fabian Affolter <fabian@affolter-engineering.ch>"]
 homepage = "https://github.com/home-assistant-ecosystem/python-glances-api"
 repository = "https://github.com/home-assistant-ecosystem/python-glances-api/releases"
-readme = "README.rst"
+readme = "README.md"
 license = "MIT"
 classifiers = [
     "Development Status :: 3 - Alpha",
