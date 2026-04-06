@@ -21,7 +21,7 @@ classifiers = [
 python = "^3.13"
 httpx = ">=0.28,<1"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^26.3"
 pytest = "^9"
 pytest-httpx = ">0.35,<1"
