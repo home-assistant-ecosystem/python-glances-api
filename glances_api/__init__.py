@@ -112,6 +112,7 @@ class Glances:
                 sensor_data["fs"][disk["mnt_point"]] = {
                     "disk_use": round(disk["used"] / 1024**3, 1),
                     "disk_use_percent": disk["percent"],
+                    "disk_size": round(disk["size"] / 1024**3, 1),
                     "disk_free": round(disk_free / 1024**3, 1),
                 }
         if data := self.data.get("sensors"):
