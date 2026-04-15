@@ -188,8 +188,11 @@ class Glances:
                 container
                 for container in containers_data
                 # "status" since Glance v4, "Status" in v3 and earlier
+                # "healthy" status added to Glances 4.5 (see issue #50)
                 if container.get("status") == "running"
                 or container.get("Status") == "running"
+                or container.get("status") == "healthy"
+                or container.get("Status") == "healthy"
             ]
             sensor_data["docker"] = {"docker_active": len(active_containers)}
             cpu_use = 0.0
