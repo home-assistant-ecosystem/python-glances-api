@@ -211,6 +211,26 @@ class Glances:
                         container["memory"].get("usage", 0) / 1024**2, 1
                     ),
                 }
+            container_list = []
+            for container in containers_data:
+                container_dict = {}
+                if container.get("uptime") is None:
+                    uptime_txt = "None"
+                else:
+                    uptime_txt = container.get("uptime")
+                container_dict = {
+                    "n" : container["name"],
+                    "c": round(container["cpu"].get("total", 0), 1),
+                    "m": round(container["memory"].get("usage", 0) / 1024**2, 1),
+                    "u": uptime_txt,
+                    "s": container.get("status"),
+                    "i": container.get("id")[:8],
+                    "e": container.get("engine"),
+                }
+                container_list.append(json.dumps(container_dict))
+            containersjson = json.dumps(container_list)
+            sensor_data["containers"] = {"containerslist": containersjson}
+            
         if data := self.data.get("raid"):
             sensor_data["raid"] = data
         if data := self.data.get("uptime"):
@@ -232,4 +252,22 @@ class Glances:
                     "read": round(disk["read_bytes"] / time_since_update),
                     "write": round(disk["write_bytes"] / time_since_update),
                 }
+        if data := self.data.get("amps"):
+            sensor_data["amps"] = {}
+            for amps in data:
+                if amps["result"] is None:
+                    rescount = 0
+                    restext = "None"
+                else:
+                    rescount = re.findall("^\d+",amps["result"])[0]
+                    restext = amps["result"]
+                sensor_data["amps"][amps["name"]] = {
+                    "result":restext,
+                    # "count": amps["count"],
+                    # "countmin": amps["countmin"],
+                    # "countmax": amps["countmax"],
+                    # "regex": amps["regex"],
+                    "resultcount": rescount
+                }
+        
         return sensor_data
