@@ -227,9 +227,14 @@ class Glances:
         if data := self.data.get("diskio"):
             sensor_data["diskio"] = {}
             for disk in data:
-                time_since_update = disk["time_since_update"]
+                read = write = None
+                # Glances v4 omits "time_since_update" on the first sample after
+                # the server starts, as there is no previous sample to compare to
+                if time_since_update := disk.get("time_since_update"):
+                    read = round(disk["read_bytes"] / time_since_update)
+                    write = round(disk["write_bytes"] / time_since_update)
                 sensor_data["diskio"][disk["disk_name"]] = {
-                    "read": round(disk["read_bytes"] / time_since_update),
-                    "write": round(disk["write_bytes"] / time_since_update),
+                    "read": read,
+                    "write": write,
                 }
         return sensor_data
