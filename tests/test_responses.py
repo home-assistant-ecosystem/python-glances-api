@@ -454,6 +454,38 @@ async def test_ha_sensor_data(
 
 
 @pytest.mark.asyncio
+async def test_ha_sensor_data_diskio_first_sample(httpx_mock: HTTPXMock) -> None:
+    """Test the diskio sensors on the first sample after Glances v4 starts."""
+    # No previous sample yet: no "time_since_update", no rates, raw counters
+    response = {
+        **RESPONSE_V4,
+        "diskio": [
+            {
+                "read_count": 442933,
+                "write_count": 937984,
+                "read_bytes": 15653558272,
+                "write_bytes": 16872076288,
+                "read_time": 64763666,
+                "write_time": 171581008,
+                "key": "disk_name",
+                "disk_name": "nvme0n1",
+            },
+        ],
+    }
+    expected = {
+        **HA_SENSOR_DATA_V4,
+        "diskio": {"nvme0n1": {"read": None, "write": None}},
+    }
+
+    httpx_mock.add_response(json=response)
+
+    client = Glances(version=4)
+    result = await client.get_ha_sensor_data()
+
+    assert result == expected
+
+
+@pytest.mark.asyncio
 async def test_ha_sensor_data_with_incomplete_container_information(
     httpx_mock: HTTPXMock,
 ) -> None:
