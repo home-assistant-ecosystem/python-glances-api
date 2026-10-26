@@ -261,11 +261,13 @@ class Glances:
         if data := self.data.get("amps"):
             sensor_data["amps"] = {}
             for amps in data:
+                rescount: str | int
                 if amps["result"] is None:
                     rescount = 0
                     restext = "None"
                 else:
-                    rescount = re.findall(r"^\d+",amps["result"])[0]
+                    prefix = re.match(r"^\d+", amps["result"])
+                    rescount = prefix.group() if prefix is not None else 0
                     restext = amps["result"]
                 sensor_data["amps"][amps["name"]] = {
                     "result":restext,
