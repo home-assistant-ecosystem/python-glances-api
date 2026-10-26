@@ -488,6 +488,38 @@ async def test_ha_sensor_data_diskio_first_sample(httpx_mock: HTTPXMock) -> None
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("amp_result", "expected_text", "expected_count"),
+    [
+        pytest.param(None, "None", 0, id="no-result"),
+        pytest.param("", "", 0, id="empty-result"),
+        pytest.param("No running process", "No running process", 0, id="no-process"),
+        pytest.param("healthy", "healthy", 0, id="text-result"),
+        pytest.param("12 packages", "12 packages", "12", id="numeric-prefix"),
+        pytest.param("0 packages", "0 packages", "0", id="zero-prefix"),
+    ],
+)
+async def test_ha_sensor_data_preserves_amp_result(
+    httpx_mock: HTTPXMock,
+    amp_result: str | None,
+    expected_text: str,
+    expected_count: str | int,
+) -> None:
+    """AMP text without a numeric prefix must not interrupt sensor updates."""
+    httpx_mock.add_response(
+        json={**RESPONSE_V4, "amps": [{"name": "example", "result": amp_result}]}
+    )
+
+    client = Glances(version=4)
+    result = await client.get_ha_sensor_data()
+
+    assert result == {
+        **HA_SENSOR_DATA_V4,
+        "amps": {"example": {"result": expected_text, "resultcount": expected_count}},
+    }
+
+
+@pytest.mark.asyncio
 async def test_ha_sensor_data_with_incomplete_container_information(
     httpx_mock: HTTPXMock,
 ) -> None:
