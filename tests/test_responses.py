@@ -324,6 +324,7 @@ HA_SENSOR_DATA: dict[str, Any] = {
             "container_memory_use": 81.2,
         },
     },
+    "containerslist": '["{\\"n\\": \\"container1\\", \\"c\\": 50.9, \\"m\\": 1068.4, \\"u\\": \\"None\\", \\"s\\": null, \\"i\\": \\"\\", \\"e\\": null}", "{\\"n\\": \\"container2\\", \\"c\\": 26.2, \\"m\\": 81.2, \\"u\\": \\"None\\", \\"s\\": null, \\"i\\": \\"\\", \\"e\\": null}"]',
 }
 
 RESPONSE_V4: dict[str, Any] = {
@@ -397,6 +398,7 @@ HA_SENSOR_DATA_V4: dict[str, Any] = {
             "container_memory_use": 0.0,
         },
     },
+    "containerslist": '["{\\"n\\": \\"container1\\", \\"c\\": 0.4, \\"m\\": 0.0, \\"u\\": \\"28 secs\\", \\"s\\": \\"running\\", \\"i\\": \\"1234\\", \\"e\\": \\"docker\\"}", "{\\"n\\": \\"container2\\", \\"c\\": 0.0, \\"m\\": 0.0, \\"u\\": \\"3 days\\", \\"s\\": \\"running\\", \\"i\\": \\"5678\\", \\"e\\": \\"docker\\"}"]',
 }
 
 
@@ -503,6 +505,7 @@ async def test_ha_sensor_data_with_incomplete_container_information(
     ha_sensor_data["containers"]["container1"]["container_cpu_use"] = 0
     ha_sensor_data["containers"]["container2"]["container_memory_use"] = 0
     ha_sensor_data["containers"]["container2"]["container_cpu_use"] = 0
+    ha_sensor_data["containerslist"] = '["{\\"n\\": \\"container1\\", \\"c\\": 0, \\"m\\": 0.0, \\"u\\": \\"None\\", \\"s\\": null, \\"i\\": \\"\\", \\"e\\": null}", "{\\"n\\": \\"container2\\", \\"c\\": 0, \\"m\\": 0.0, \\"u\\": \\"None\\", \\"s\\": null, \\"i\\": \\"\\", \\"e\\": null}"]'
 
     httpx_mock.add_response(json=response)
 

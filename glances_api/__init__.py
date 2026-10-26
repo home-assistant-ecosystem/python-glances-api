@@ -226,12 +226,11 @@ class Glances:
                     "m": round(container["memory"].get("usage", 0) / 1024**2, 1),
                     "u": uptime_txt,
                     "s": container.get("status"),
-                    "i": container.get("id")[:8],
+                    "i": (container.get("id") or "")[:8],
                     "e": container.get("engine"),
                 }
                 container_list.append(json.dumps(container_dict))
-            containersjson = json.dumps(container_list)
-            sensor_data["containers"] = {"containerslist": containersjson}
+            sensor_data["containerslist"] = json.dumps(container_list)
             
         if data := self.data.get("raid"):
             sensor_data["raid"] = data
