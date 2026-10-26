@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import logging
+import re
 from typing import Any
 
 import httpx
@@ -264,7 +266,7 @@ class Glances:
                     rescount = 0
                     restext = "None"
                 else:
-                    rescount = re.findall("^\d+",amps["result"])[0]
+                    rescount = re.findall(r"^\d+",amps["result"])[0]
                     restext = amps["result"]
                 sensor_data["amps"][amps["name"]] = {
                     "result":restext,
